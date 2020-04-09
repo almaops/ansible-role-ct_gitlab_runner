@@ -1,0 +1,48 @@
+---
+- name: create srv dir
+  file:
+    path: "{{ gitlab_runner_cfg_dir }}"
+    state: directory
+    mode: 0755
+    recurse: true
+
+- name: gitlab-runner container
+  docker_container:
+    name: "{{ gitlab_runner_ct_name }}"
+    image: "{{ gitlab_runner_ct_image }}"
+    volumes:
+      - "{{ gitlab_runner_cfg_dir }}:/etc/gitlab-runner"
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart_policy: "{{ gitlab_runner_ct_restart_policy }}"
+    state: "{{ gitlab_runner_ct_state }}"
+    restart: "{{ gitlab_runner_ct_restart }}"
+    pull: "{{ gitlab_runner_ct_pull }}"
+
+- name: check if runner is already registered
+  stat:
+    path: "{{ gitlab_runner_cfg_file }}"
+  register: gitlab_runner_cfg_file_status
+
+- name: register runner
+  shell: >
+    docker exec {{ gitlab_runner_ct_name }} gitlab-runner unregister --all-runners;
+    docker exec {{ gitlab_runner_ct_name }} gitlab-runner register
+    --non-interactive
+    --url '{{ gitlab_runner_coordinator_url }}'
+    --registration-token '{{ gitlab_runner_registration_token }}'
+    --description '{{ gitlab_runner_name }}'
+    --tag-list '{{ gitlab_runner_tags|default([]) | join(",") }}'
+    --executor '{{ gitlab_runner_executor }}'
+    --limit '{{ gitlab_runner_parallel_builds_number }}'
+    --docker-image '{{ gitlab_runner_docker_image }}'
+    {% if gitlab_runner_cache_s3_enabled %}
+    --cache-s3-server-address '{{ gitlab_runner_cache_s3_server_address }}'
+    --cache-s3-access-key '{{ gitlab_runner_cache_s3_access_key }}'
+    --cache-s3-secret-key '{{ gitlab_runner_cache_s3_secret_key }}'
+    {% endif %}
+    {% for volume in gitlab_runner_docker_volumes | default([]) %}
+    --docker-volumes "{{ volume }}"
+    {% endfor %}
+  when: (not gitlab_runner_cfg_file_status.stat.exists) or gitlab_runner_force_reg
+
+# https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml

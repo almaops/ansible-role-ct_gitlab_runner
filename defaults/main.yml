@@ -1,0 +1,31 @@
+---
+gitlab_runner_name: "{{ inventory_hostname }}"
+gitlab_runner_ct_name: "gitlab-runner"
+
+#gitlab_runner_registration_token: ""
+gitlab_runner_coordinator_url: "https://gitlab.com/ci"
+
+gitlab_runner_tags: []
+gitlab_runner_executor: "docker"
+gitlab_runner_parallel_builds_number: "1"
+gitlab_runner_docker_image: "alpine"
+
+gitlab_runner_srv_dir: "/srv"
+gitlab_runner_cfg_dir: "{{ gitlab_runner_srv_dir }}/{{ gitlab_runner_ct_name }}/config"
+gitlab_runner_cfg_file: "{{ gitlab_runner_cfg_dir }}/config.toml"
+
+gitlab_runner_ct_image: "gitlab/gitlab-runner:latest"
+gitlab_runner_ct_restart_policy: "always"
+gitlab_runner_ct_state: "started"
+gitlab_runner_ct_restart: false
+gitlab_runner_ct_pull: true
+
+gitlab_runner_cache_s3_enabled: false
+# # get this data from minio config
+# gitlab_runner_cache_s3_server_address: ""
+# gitlab_runner_cache_s3_access_key: ""
+# gitlab_runner_cache_s3_secret_key: ""
+
+gitlab_runner_force_reg: false
+
+gitlab_runner_docker_volumes: []

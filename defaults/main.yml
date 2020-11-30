@@ -29,3 +29,5 @@ gitlab_runner_cache_s3_enabled: false
 gitlab_runner_force_reg: false
 
 gitlab_runner_docker_volumes: []
+
+gitlab_runner_dind_enabled: false

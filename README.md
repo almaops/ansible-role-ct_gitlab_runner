@@ -49,6 +49,8 @@ Role Variables
 
 `gitlab_runner_docker_volumes`: additional mounts for containers, default is `[]`; useful if you want to pass `docker.sock` or to mount `/cache` volume
 
+`gitlab_runner_dind_enabled`: set to `true` if you need your docker containers to run in priveleged mode; default is `false`
+
 Example Playbook
 ----------------
 

@@ -17,6 +17,7 @@
     state: "{{ gitlab_runner_ct_state }}"
     restart: "{{ gitlab_runner_ct_restart }}"
     pull: "{{ gitlab_runner_ct_pull }}"
+    etc_hosts: "{{ gitlab_runner_etc_hosts | default(omit) }}"
 
 - name: check if runner is already registered
   stat:

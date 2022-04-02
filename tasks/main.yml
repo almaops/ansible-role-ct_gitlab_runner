@@ -36,6 +36,7 @@
     --executor '{{ gitlab_runner_executor }}'
     --limit '{{ gitlab_runner_parallel_builds_number }}'
     --docker-image '{{ gitlab_runner_docker_image }}'
+    --run-untagged='{{ gitlab_runner_run_untagged }}'
     {% if gitlab_runner_cache_s3_enabled %}
     --cache-s3-server-address '{{ gitlab_runner_cache_s3_server_address }}'
     --cache-s3-access-key '{{ gitlab_runner_cache_s3_access_key }}'
@@ -49,4 +50,15 @@
     {% endfor %}
   when: (not gitlab_runner_cfg_file_status.stat.exists) or gitlab_runner_force_reg
 
-# https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml
+- name: setup runner concurrency
+  lineinfile:
+    path: "{{ gitlab_runner_cfg_file }}"
+    regexp: '^concurrent'
+    line: 'concurrent = {{ gitlab_runner_parallel_builds_number }}'
+  register: gitlab_runner_cfg_file_status
+
+- name: restart runner to apply concurrency settings
+  docker_container:
+    name: "{{ gitlab_runner_ct_name }}"
+    restart: true
+  when: gitlab_runner_cfg_file_status is changed

@@ -66,6 +66,6 @@
 
 - name: "{{ ct_gitlab_runner_task_prefix }} Restart runner to apply concurrency settings"
   docker_container:
-    name: "{{ gitlab_runner_ct_name }}"
+    name: "{{ ct_gitlab_runner_ct_name }}"
     restart: true
   when: ct_gitlab_runner_path_cfg_file_status is changed

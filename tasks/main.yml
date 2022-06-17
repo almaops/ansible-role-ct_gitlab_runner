@@ -54,6 +54,7 @@
     {% for volume in ct_gitlab_runner_docker_volumes %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
+    --access-level="{{ ct_gitlab_runner_protected | bool | ternary('ref_protected','not_protected') }}"
   when: (not ct_gitlab_runner_path_cfg_file.stat.exists) or ct_gitlab_runner_force_reg
   changed_when: false
 

@@ -7,6 +7,7 @@ ct_gitlab_runner_cache_s3_enabled: false
 ct_gitlab_runner_force_reg: false
 ct_gitlab_runner_dind_enabled: false
 ct_gitlab_runner_dond_enabled: true
+ct_gitlab_runner_protected: false
 
 # Path settings
 ct_gitlab_runner_path_srv_dir: "/srv"

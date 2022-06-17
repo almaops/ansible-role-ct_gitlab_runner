@@ -61,6 +61,8 @@ Role Variables
 
 `ct_gitlab_runner_dond_enabled`: if set to `true` (and this is the default), we also pass `/var/run/docker.sock` into runner container
 
+`ct_gitlab_runner_protected`: if set to `true` register runner as protected, docs - https://docs.gitlab.com/ee/ci/runners/configure_runners.html#prevent-runners-from-revealing-sensitive-information
+
 There're several more interesting variables. Have a look on them: [defaults/main.yml](defaults/main.yml)
 
 Example Playbook
